@@ -6,7 +6,6 @@ def jogar():
     escolher_nivel_do_jogo()
 
 
-# TODO aqui rola usar o conceito de parametros opcionais e com valores defaults
 def inicializa_tabuleiro(numero_de_linhas, numero_de_colunas):
     tabuleiro = [[0 for _ in range(numero_de_colunas)] for _ in range(numero_de_linhas)]
 
@@ -17,37 +16,27 @@ def inicializa_tabuleiro(numero_de_linhas, numero_de_colunas):
     posicoes_das_minas = posicionando_as_minas_no_tabuleiro(numero_de_linhas, numero_de_colunas, total_posicoes)
 
     print("posicoes das minas " + str(posicoes_das_minas))
+    quantidade_de_minas = len(posicoes_das_minas)
 
-    # TODO talvez colocar em posição de tabuleiro certinho
     for linha in tabuleiro:
         for i in range(len(linha)):
             linha[i] = "#"
     print("tabuleiro " + str(tabuleiro))
 
-    posicao_chutada = int(input("Digite o número da posição que você gostaria de descobrir"))
+    while quantidade_de_minas != 0:
+        posicao_chutada = int(input("Digite o número da posição que você gostaria de descobrir"))
 
-    if posicao_chutada > total_posicoes:
-        print("Por favor informe uma posição válida")
-    elif posicao_chutada in posicoes_das_minas:
-        print("posicao " + str(posicao_chutada) + " é uma mina! Fim de jogo")
-    else:
-        print("Posição chutada não é uma mina")
-
-
-def contar_minas_adjacentes(tabuleiro, linha, coluna):
-    total_linhas = len(tabuleiro)
-    print(total_linhas)
-    total_colunas = len(tabuleiro[0])
-    print(total_colunas)
-    contagem = 0
-
-    for i in range(max(0, linha - 1), min(total_linhas, linha + 2)):
-        for j in range(max(0, coluna - 1), min(total_colunas, coluna + 2)):
-            if tabuleiro[i][j] == "M":
-                contagem += 1
-
-    return contagem
-
+        if posicao_chutada > total_posicoes:
+            print("Por favor informe uma posição válida")
+            continue
+        elif posicao_chutada in posicoes_das_minas:
+            print("posicao " + str(posicao_chutada) + " é uma mina! Fim de jogo")
+        else:
+            linha, coluna = divmod(posicao_chutada, numero_de_colunas)
+            tabuleiro[linha][coluna] = "M"
+            quantidade_de_minas -= 1
+            print("posicao das minas " + str(quantidade_de_minas))
+            print(tabuleiro)
 
 def mensagem_boas_vindas():
     print("******************************")
@@ -66,6 +55,8 @@ def escolher_nivel_do_jogo():
         inicializa_tabuleiro(6, 6)
     elif nivel == 3:
         inicializa_tabuleiro(7, 7)
+    else:
+        print("Essa opção não é válida")
 
 
 def posicionando_as_minas_no_tabuleiro(numero_de_linhas, numero_de_colunas, total_posicoes):
